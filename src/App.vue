@@ -59,8 +59,6 @@
                   landscape
                   :allowed-dates="allowedDates"
                   :events="allowedDates"
-                  min="2021-11-01"
-                  max="2021-11-30"
                 ></v-date-picker>
                 <v-btn
                   @click="update()"
@@ -74,30 +72,7 @@
             cols="12"
             md="4"
           >
-            <h4 class="mb-4">Quienes votaron?</h4>            
-            <v-card>
-              <v-list-item
-                v-for="user in $store.state.voted"
-                :key="user.id"
-              >
-                <v-list-item-icon>
-                  <v-icon
-                    v-if="user.checked"
-                    color="primary"
-                  >
-                    mdi-check
-                  </v-icon>
-                </v-list-item-icon>
-
-                <v-list-item-content>
-                  <v-list-item-title v-text="user.name"></v-list-item-title>
-                </v-list-item-content>
-
-                <v-list-item-avatar>
-                  <v-img :src="user.avatar"></v-img>
-                </v-list-item-avatar>
-              </v-list-item>
-            </v-card>
+            <who-voted />
           </v-col>
         </v-row>
       </v-container>
@@ -108,9 +83,13 @@
 <script>
 // eslint-disable-next-line
 import { mapState, mapGetters, mapActions } from 'vuex'
+import WhoVoted from './components/WhoVoted.vue'
 
 export default {
   name: 'App',
+  components: {
+    WhoVoted
+  },
   data: () => ({
     links: [
       'Inicio',
