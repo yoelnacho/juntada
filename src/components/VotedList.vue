@@ -33,8 +33,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
-  name: 'WhoVoted',
+  name: 'VotedList',
   data: () => ({
     //
   }),

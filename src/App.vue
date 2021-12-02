@@ -23,13 +23,7 @@
         </v-tab>
       </v-tabs>
 
-      <v-avatar
-        class="hidden-sm-and-down"
-        color="primary darken-1 shrink"
-        size="32"
-      >
-        <v-img v-if="currentUser" :src="currentUser.avatar"></v-img>
-        <span v-else class="white--text text-h8">IA</span></v-avatar>
+      <current-user :current-user="currentUser" />
     </v-app-bar>
 
     <v-main class="grey lighten-3">
@@ -72,7 +66,7 @@
             cols="12"
             md="4"
           >
-            <who-voted />
+            <voted-list />
           </v-col>
         </v-row>
       </v-container>
@@ -83,12 +77,14 @@
 <script>
 // eslint-disable-next-line
 import { mapState, mapGetters, mapActions } from 'vuex'
-import WhoVoted from './components/WhoVoted.vue'
+import CurrentUser from './components/CurrentUser.vue'
+import VotedList from './components/VotedList.vue'
 
 export default {
   name: 'App',
   components: {
-    WhoVoted
+    VotedList,
+    CurrentUser
   },
   data: () => ({
     links: [
