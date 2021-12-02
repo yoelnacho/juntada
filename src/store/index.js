@@ -7,18 +7,18 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         isLoading: true,
-        user: {},
-        baseURL: 'https://juntada-5c86c-default-rtdb.firebaseio.com',
-        proposed: ['2021-11-28', '2021-11-21'], //'2021-11-28', '2021-11-21'
-        selected: [],
-        voted: [
-          {
-            id: '0005',
-            checked: true,
-            name: 'Nachito',
-            avatar: 'https://en.gravatar.com/userimage/416096/5a2cd248216bd3a382835779257ce8cc.jpg'
-          }
-        ],
+        currentUser: {},
+        proposed: [], //'2021-11-28', '2021-11-21'
+        // voted: [
+        //   {
+        //     id: '0005',
+        //     checked: true,
+        //     name: 'Nachito',
+        //     avatar: 'https://en.gravatar.com/userimage/416096/5a2cd248216bd3a382835779257ce8cc.jpg'
+        //   }
+        // ],
+        myVote: [],
+        voted: [],
         users: [
           {
             id: '0001',
@@ -53,9 +53,9 @@ export default new Vuex.Store({
         ]
     },
     mutations: {
-      SET_USER(state, payload) {
+      SET_CURRENT_USER(state, payload) {
         const {...user} = Object.values(payload)
-        state.user = user[0]
+        state.currentUser = user[0]
         //console.log(state.user.id)
       },
       SET_PROPOSED(state, payload) {
@@ -63,14 +63,20 @@ export default new Vuex.Store({
         state.proposed = date
         //console.log(payload)
       },
-      SELECTED(state, payload) {
-        state.selected = payload
-      },
-      PROPOSED_UPDATE(state, payload) {
+      UPDATE_PROPOSED(state, payload) {
         state.proposed = payload
       },
-      VOTED_LOAD(state, payload) {
+      LOAD_VOTED(state, payload) {
         state.voted = payload
+      },
+      SET_VOTE(state, payload) {
+        const send = {
+          dates: payload,
+          ...state.user
+        }
+        
+        state.myVote = payload
+        state.voted.push(send)
       }
     },
     actions: {
@@ -78,9 +84,9 @@ export default new Vuex.Store({
         try {
             const { data } = await meetingApi.get('/users.json')
 
-            commit('SET_USER', data);
+            commit('SET_CURRENT_USER', data);
         } catch (error) {
-            commit('SET_USER', {});
+            commit('SET_CURRENT_USER', {});
         }
       },
       async loadProposed({ commit }) {
@@ -96,24 +102,25 @@ export default new Vuex.Store({
         try {
             const { data } = await meetingApi.get('/voted.json')
 
-            commit('VOTED_LOAD', data);
+            commit('LOAD_VOTED', data);
         } catch (error) {
-            commit('VOTED_LOAD', []);
+            commit('LOAD_VOTED', []);
         }
       },
-      proposedUpdate({commit}, data) {
-        commit('PROPOSED_UPDATE', data)
+      setVote({ commit } , data) {
+        commit('SET_VOTE', data)
       },
-      selected({commit}, data) {
-        commit('SELECTED', data)
+      proposedUpdate({commit}, data) {
+        commit('UPDATE_PROPOSED', data)
       }
     },
     getters: {
+      // After login
       currentUser(state) {
         return state.user = state.users[4];
       },
+      // make a filter
       votedList(state) {
-        
         return state.voted;
       }
   }
